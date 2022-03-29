@@ -8,8 +8,6 @@ use BadMethodCallException;
 use Exception;
 use League\Event\EventDispatcher as BaseEventDispatcher;
 use League\Event\PrioritizedListenerRegistry;
-use Pollen\Support\Concerns\ConfigBagAwareTrait;
-use Pollen\Support\Concerns\ParamsBagAwareTrait;
 use Pollen\Support\Exception\ManagerRuntimeException;
 use Pollen\Support\Proxy\ContainerProxy;
 use Psr\Container\ContainerInterface as Container;
@@ -21,9 +19,7 @@ use Throwable;
  */
 class EventDispatcher implements EventDispatcherInterface
 {
-    use ConfigBagAwareTrait;
     use ContainerProxy;
-    use ParamsBagAwareTrait;
 
     /**
      * Event dispatcher main instance.
@@ -43,13 +39,10 @@ class EventDispatcher implements EventDispatcherInterface
     protected $listenerProvider;
 
     /**
-     * @param array $config
      * @param Container|null $container
      */
-    public function __construct(array $config = [], ?Container $container = null)
+    public function __construct(?Container $container = null)
     {
-        $this->setConfig($config);
-
         if ($container !== null) {
             $this->setContainer($container);
         }
@@ -151,5 +144,13 @@ class EventDispatcher implements EventDispatcherInterface
         $e = $this->dispatch(new TriggeredEvent($event, $args));
 
         return $e;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function dispatch(object $event): object
+    {
+        return $this->delegateDispatcher->dispatch($event);
     }
 }

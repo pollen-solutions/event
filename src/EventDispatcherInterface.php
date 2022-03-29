@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace Pollen\Event;
 
-use Pollen\Support\Concerns\ConfigBagAwareTraitInterface;
-use Pollen\Support\Concerns\ParamsBagAwareTraitInterface;
+use League\Event\EventDispatcher as BaseEventDispatcher;
 use Pollen\Support\Proxy\ContainerProxyInterface;
+use Psr\EventDispatcher\EventDispatcherInterface as PsrEventDispatcherInterface;
 
-interface EventDispatcherInterface extends
-    ContainerProxyInterface,
-    ConfigBagAwareTraitInterface,
-    ParamsBagAwareTraitInterface
+/**
+ * @mixin BaseEventDispatcher
+ */
+interface EventDispatcherInterface extends ContainerProxyInterface, PsrEventDispatcherInterface
 {
     /**
      * Register a listener for a triggered event.
